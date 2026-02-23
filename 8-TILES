@@ -1,0 +1,61 @@
+from collections import deque
+
+goal_state = (
+    (1, 2, 3),
+    (4, 5, 6),
+    (7, 8, 0)
+)
+
+moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+
+def find_blank(state):
+    for i in range(3):
+        for j in range(3):
+            if state[i][j] == 0:
+                return i, j
+
+
+def generate_states(state):
+    x, y = find_blank(state)
+    new_states = []
+
+    for dx, dy in moves:
+        nx, ny = x + dx, y + dy
+        if 0 <= nx < 3 and 0 <= ny < 3:
+            temp = [list(row) for row in state]
+            temp[x][y], temp[nx][ny] = temp[nx][ny], temp[x][y]
+            new_states.append(tuple(tuple(row) for row in temp))
+
+    return new_states
+
+
+def bfs(start):
+    queue = deque([(start, [])])
+    visited = set()
+
+    while queue:
+        current, path = queue.popleft()
+
+        if current == goal_state:
+            return path + [current]
+
+        visited.add(current)
+
+        for next_state in generate_states(current):
+            if next_state not in visited:
+                queue.append((next_state, path + [current]))
+
+
+start_state = (
+    (1, 2, 3),
+    (4, 0, 6),
+    (7, 5, 8)
+)
+
+solution = bfs(start_state)
+
+for step in solution:
+    for row in step:
+        print(row)
+    print()
