@@ -1,0 +1,42 @@
+import heapq
+
+def un_cs(graph, start, goal):
+    frontier = []
+    heapq.heappush(frontier, (0, start, [start]))
+    explored = set()
+
+    while frontier:
+        cost, node, path = heapq.heappop(frontier)
+
+        if node == goal:
+            print("Optimal path :", path)
+            print("Path cost :", cost)
+            return
+
+        if node in explored:
+            continue
+
+        explored.add(node)
+
+        for neighbour, edge_cost in graph[node]:
+            if neighbour not in explored:
+                heapq.heappush(frontier,
+                               (cost + edge_cost, neighbour, path + [neighbour]))
+
+    print("No path found")
+
+
+graph = {
+    'A': [('B', 2), ('C', 4)],
+    'B': [('D', 7), ('E', 3)],
+    'C': [('F', 5)],
+    'D': [],
+    'E': [('G', 6)],
+    'F': [('G', 1)],
+    'G': []
+}
+
+start = 'A'
+goal = 'G'
+
+un_cs(graph, start, goal)
