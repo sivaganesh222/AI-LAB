@@ -1,0 +1,72 @@
+def vacuum_cleaner(room, position):
+    if room[position] == 1:
+        return "Suck"
+    elif position == 0:
+        return "Right"
+    elif position == 1:
+        return "Straight"
+    elif position == 2:
+        return "Straight"
+    elif position == 3:
+        return "Left"
+    else:
+        return "No Operation"
+
+
+rooms = {
+    1: [1, 1, 1, 1],
+    2: [1, 1, 1, 1],
+    3: [1, 1, 1, 1],
+    4: [1, 1, 1, 1],
+    5: [1, 1, 1, 1],
+    6: [1, 1, 1, 1]
+}
+
+movement = {
+    1: ("Right", 2),
+    2: ("Straight", 3),
+    3: ("Left", 4),
+    4: ("Straight", 5),
+    5: ("Right", 6),
+    6: ("Stop", None)
+}
+
+current_room = 1
+
+while current_room is not None:
+    room = rooms[current_room]
+
+    left_initial = sum(room[:2])
+    right_initial = sum(room[2:])
+    left_cleaned = 0
+    right_cleaned = 0
+
+    position = 0
+
+    while position < 4:
+        action = vacuum_cleaner(room, position)
+
+        if action == "Suck":
+            room[position] = 0
+            if position < 2:
+                left_cleaned += 1
+            else:
+                right_cleaned += 1
+        else:
+            position += 1
+
+    left_performance = (left_cleaned / left_initial) * 100
+    right_performance = (right_cleaned / right_initial) * 100
+    total_performance = (left_performance + right_performance) / 2
+
+    print("Room", current_room)
+    print("Cleaned array:", room)
+    print(" Left Performance :", f"{left_performance:.2f}%")
+    print(" Right Performance:", f"{right_performance:.2f}%")
+    print(" Total Performance:", f"{total_performance:.2f}%")
+
+    direction, next_room = movement[current_room]
+    print("Move:", direction)
+    print()
+
+    current_room = next_room
