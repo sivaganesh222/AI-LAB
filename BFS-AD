@@ -1,0 +1,54 @@
+from collections import deque
+
+graph = {
+    'A': ['B', 'C', 'D'],
+    'B': ['E', 'F'],
+    'C': ['J'],
+    'D': ['G', 'H'],
+    'E': ['I'],
+    'F': ['I'],
+    'G': ['K', 'L'],
+    'H': [],
+    'I': [],
+    'J': [],
+    'K': [],
+    'L': []
+}
+
+def bfs(start, goal):
+    queue = deque([[start]])
+    visited = []
+    visited_set = set([start])
+    traversal = []
+    step = 1
+
+    print(f"{'Step':<5} {'Current':<10} {'Adjacent':<15} {'Visited Node':<20} Traversal Path")
+    print("-" * 75)
+
+    while queue:
+        path = queue.popleft()
+        node = path[-1]
+
+        if node not in visited:
+            visited.append(node)
+
+        adjacent = graph[node]
+
+        print(f"{step:<5} {node:<10} {str(adjacent):<15} {str(visited):<20} {' -> '.join(path)}")
+
+        if node == goal:
+            traversal = path
+            break
+
+        for child in graph[node]:
+            if child not in visited_set:
+                visited_set.add(child)
+                queue.append(path + [child])
+
+        step += 1
+
+    print("\nFinal Optimal BFS Traversal Path:")
+    print(" -> ".join(traversal))
+
+
+bfs('A', 'L')
