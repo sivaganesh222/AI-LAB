@@ -1,0 +1,56 @@
+def vacuum_cleaner(location, dirt_percentage):
+    if dirt_percentage > 0:
+        return "Suck"
+    elif location == "A":
+        return "Move Right"
+    elif location == "B":
+        return "Move Left"
+
+
+rooms = {
+    "A": 75,
+    "B": 85
+}
+
+initial_dirt_A = rooms["A"]
+initial_dirt_B = rooms["B"]
+
+location = "A"
+cleaning_power = 25
+
+dirt_removed_A = 0
+dirt_removed_B = 0
+
+for step in range(10):
+    action = vacuum_cleaner(location, rooms[location])
+
+    if action == "Suck":
+        dirt_before = rooms[location]
+        rooms[location] = max(0, rooms[location] - cleaning_power)
+        dirt_removed = dirt_before - rooms[location]
+
+        if location == "A":
+            dirt_removed_A += dirt_removed
+        else:
+            dirt_removed_B += dirt_removed
+
+        if rooms[location] == 0:
+            location = "B" if location == "A" else "A"
+
+    elif action == "Move Right":
+        location = "B"
+    elif action == "Move Left":
+        location = "A"
+
+print(f"Initial dirt present in room A:{initial_dirt_A :.2f}%")
+print(f"after sucking the dirt in room A:{dirt_removed_A :.2f}%")
+print(f"Initial dirt present in room B:{initial_dirt_B :.2f}%")
+print(f"after sucking the dirt in room B:{dirt_removed_B :.2f}%")
+performance_A = (dirt_removed_A / initial_dirt_A) * 100
+performance_B = (dirt_removed_B / initial_dirt_B) * 100
+overall_initial_dirt = initial_dirt_A + initial_dirt_B
+overall_removed_dirt = dirt_removed_A + dirt_removed_B
+overall_performance = (overall_removed_dirt / overall_initial_dirt) * 100
+print(f"Room A Performance: {performance_A:.2f}%")
+print(f"Room B Performance: {performance_B:.2f}%")
+print(f"Overall Performance: {overall_performance:.2f}%")
