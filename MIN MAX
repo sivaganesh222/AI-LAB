@@ -1,0 +1,106 @@
+import math
+
+board = [' ' for _ in range(9)]
+
+def print_board():
+    for i in range(3):
+        print(board[i*3], "|", board[i*3+1], "|", board[i*3+2])
+        if i < 2:
+            print("---------")
+
+def check_winner(p):
+    win = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+    ]
+    
+    for s in win:
+        if board[s[0]] == board[s[1]] == board[s[2]] == p:
+            return True
+    return False
+
+def is_full():
+    return ' ' not in board
+
+def minimax(is_max):
+    
+    if check_winner('X'):
+        return 1
+    if check_winner('O'):
+        return -1
+    if is_full():
+        return 0
+
+    if is_max:
+        best = -math.inf
+        
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'X'
+                score = minimax(False)
+                board[i] = ' '
+                best = max(best, score)
+        return best
+
+    else:
+        best = math.inf
+        
+        for i in range(9):
+            if board[i] == ' ':
+                board[i] = 'O'
+                score = minimax(True)
+                board[i] = ' '
+                best = min(best, score)
+        return best
+
+def best_move():
+    best_score = -math.inf
+    move = -1
+
+    for i in range(9):
+        if board[i] == ' ':
+            board[i] = 'X'
+            score = minimax(False)
+            board[i] = ' '
+
+            if score > best_score:
+                best_score = score
+                move = i
+
+    return move
+
+
+while True:
+
+    print_board()
+    pos = int(input("Enter position (0-8): "))
+
+    if board[pos] != ' ':
+        print("Invalid move")
+        continue
+
+    board[pos] = 'O'
+
+    if check_winner('O'):
+        print_board()
+        print("You win")
+        break
+
+    if is_full():
+        print_board()
+        print("Draw")
+        break
+
+    ai = best_move()
+    board[ai] = 'X'
+
+    if check_winner('X'):
+        print_board()
+        print("AI wins")
+        break
+
+    if is_full():
+        print_board()
+        print("Draw")
+        break
