@@ -1,0 +1,133 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyNu18AfgkcfSM5ocWCccIZA",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/sivaganesh222/AI-LAB/blob/main/WATER%20JUG\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "NjNC_eZsTngq"
+      },
+      "outputs": [],
+      "source": []
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-I8OSiJfKlkJ",
+        "outputId": "8e6e852d-df3e-4507-aac4-104861569e6c"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Solution Path:\n",
+            "(12, 0, 0, 0)\n",
+            "(9, 0, 0, 3)\n",
+            "(9, 3, 0, 0)\n",
+            "(6, 3, 0, 3)\n",
+            "(6, 6, 0, 0)\n"
+          ]
+        }
+      ],
+      "source": [
+        "from collections import deque\n",
+        "\n",
+        "capacity = (12,8,5,3)\n",
+        "start = (12,0,0,0)\n",
+        "goal = (6,6,0,0)\n",
+        "\n",
+        "def pour(state,i,j):\n",
+        "    state=list(state)\n",
+        "    amount=min(state[i],capacity[j]-state[j])\n",
+        "    state[i]-=amount\n",
+        "    state[j]+=amount\n",
+        "    return tuple(state)\n",
+        "\n",
+        "def get_next_states(state):\n",
+        "    states=[]\n",
+        "\n",
+        "    for i in range(4):\n",
+        "        s=list(state)\n",
+        "        s[i]=capacity[i]\n",
+        "        states.append(tuple(s))\n",
+        "\n",
+        "    for i in range(4):\n",
+        "        s=list(state)\n",
+        "        s[i]=0\n",
+        "        states.append(tuple(s))\n",
+        "\n",
+        "    for i in range(4):\n",
+        "        for j in range(4):\n",
+        "            if i!=j:\n",
+        "                states.append(pour(state,i,j))\n",
+        "\n",
+        "    return states\n",
+        "\n",
+        "def bfs():\n",
+        "    queue=deque()\n",
+        "    queue.append((start,[start]))\n",
+        "    visited=set()\n",
+        "\n",
+        "    while queue:\n",
+        "        state,path=queue.popleft()\n",
+        "\n",
+        "        if state in visited:\n",
+        "            continue\n",
+        "\n",
+        "        visited.add(state)\n",
+        "\n",
+        "        if state==goal:\n",
+        "            return path\n",
+        "\n",
+        "        for next_state in get_next_states(state):\n",
+        "            if next_state not in visited:\n",
+        "                queue.append((next_state,path+[next_state]))\n",
+        "\n",
+        "solution=bfs()\n",
+        "\n",
+        "print(\"Solution Path:\")\n",
+        "for step in solution:\n",
+        "    print(step)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "9YxpS-SMTomJ"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
